@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="chadak_bg">#101418</color>
+    <color name="chadak_text">#F4F7F8</color>
+    <color name="chadak_muted">#B7C0C4</color>
+    <color name="chadak_amber">#F5C451</color>
+    <color name="chadak_icon_bg">#1B2430</color>
+</resources>

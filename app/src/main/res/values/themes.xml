@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.Chadak" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/chadak_amber</item>
+        <item name="colorOnPrimary">@color/chadak_bg</item>
+        <item name="android:statusBarColor">@color/chadak_bg</item>
+        <item name="android:navigationBarColor">@color/chadak_bg</item>
+        <item name="android:windowBackground">@color/chadak_bg</item>
+        <item name="android:textColor">@color/chadak_text</item>
+    </style>
+</resources>

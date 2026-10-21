@@ -1,0 +1,26 @@
+# Built artifacts. Submission APKs are attached to GitHub Releases, not committed.
+*.apk
+*.ap_
+*.aab
+*.dex
+output-metadata.json
+
+# Secrets and machine-local files. Never commit these.
+*.jks
+*.keystore
+keystore.properties
+local.properties
+.env
+*.env
+
+# Gradle / Android Studio
+.gradle/
+build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.iml
+.idea/
+.DS_Store
+*.hprof
+.kotlin/

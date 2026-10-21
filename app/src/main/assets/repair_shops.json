@@ -1,0 +1,29 @@
+[
+  {
+    "id": "gangnam",
+    "name": "샘플정비소 강남",
+    "latitude": 37.4979,
+    "longitude": 127.0276,
+    "address": "서울 강남구 테헤란로 샘플",
+    "poiId": "seed-gangnam",
+    "poiSubId": ""
+  },
+  {
+    "id": "jamsil",
+    "name": "샘플정비소 잠실",
+    "latitude": 37.5133,
+    "longitude": 127.1028,
+    "address": "서울 송파구 올림픽로 샘플",
+    "poiId": "seed-jamsil",
+    "poiSubId": ""
+  },
+  {
+    "id": "mapo",
+    "name": "샘플정비소 마포",
+    "latitude": 37.5563,
+    "longitude": 126.9236,
+    "address": "서울 마포구 양화로 샘플",
+    "poiId": "seed-mapo",
+    "poiSubId": ""
+  }
+]

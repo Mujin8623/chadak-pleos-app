@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">차닥</string>
+    <string name="driving_title">주행 중</string>
+    <string name="driving_body">상세 화면은 주차 중에만 열립니다. 안내는 음성으로 나갑니다.</string>
+    <string name="driving_waiting">음성 안내를 기다리는 중입니다.</string>
+    <string name="driving_voice_idle">대기</string>
+    <string name="notification_channel">주행 안내</string>
+    <string name="notification_waiting">주행 중 음성 안내를 기다리는 중입니다.</string>
+    <string name="detail_title">정비 상세</string>
+    <string name="detail_clear">이상 없음</string>
+    <string name="detail_clear_reason">지금 분류된 경고가 없습니다.</string>
+    <string name="detail_no_signals">표시할 신호가 없습니다.</string>
+    <string name="open_timeline">소모품 타임라인</string>
+    <string name="timeline_title">소모품 타임라인</string>
+    <string name="timeline_placeholder">이력은 다음 버전에서 연결됩니다. 지금은 자리만 표시합니다.</string>
+    <string name="timeline_oil">엔진오일 · 기록 없음</string>
+    <string name="timeline_brake">브레이크액 · 기록 없음</string>
+    <string name="timeline_washer">워셔액 · 기록 없음</string>
+    <string name="timeline_tire">타이어 공기압 · 기록 없음</string>
+    <string name="timeline_odometer">누적 주행거리 · 기록 없음</string>
+    <string name="debug_tire">타이어 저압</string>
+    <string name="debug_oil">엔진오일 부족</string>
+    <string name="debug_demo">브레이크액 + 워셔액</string>
+    <string name="debug_yes">응</string>
+    <string name="debug_no">아니</string>
+    <string name="debug_park">주차 (P)</string>
+    <string name="debug_drive">주행 (D)</string>
+    <string name="debug_clear">신호 지우기</string>
+</resources>
