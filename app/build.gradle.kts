@@ -24,10 +24,14 @@ fun gradleToken(name: String, default: String): String {
     return raw.ifEmpty { default }
 }
 
-fun apkToken(raw: String): String = raw.replace(Regex("""[\\/:*?"<>|]"""), "_")
+// Whitespace is dropped ("차 분석가" -> "차분석가"); characters invalid in file names become "_".
+fun apkToken(raw: String): String =
+    raw.replace(Regex("""\s+"""), "").replace(Regex("""[\\/:*?"<>|]"""), "_")
 
-val teamName = apkToken(gradleToken("teamName", "TEAM"))
-val apkAppName = apkToken(gradleToken("apkAppName", "Chadak"))
+// Contest rule: apk/팀명_앱이름_release.apk -> 차분석가_차닥_release.apk
+// (team "차 분석가" is written without the space). Kotlin sources are UTF-8.
+val teamName = apkToken(gradleToken("teamName", "차분석가"))
+val apkAppName = apkToken(gradleToken("apkAppName", "차닥"))
 
 val keystorePath = System.getenv("KEYSTORE_PATH")?.trim().orEmpty()
 val keystorePassword = System.getenv("KEYSTORE_PASSWORD")?.trim().orEmpty()
