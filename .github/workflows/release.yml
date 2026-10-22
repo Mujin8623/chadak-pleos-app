@@ -1,0 +1,130 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+env:
+  # The submission APK name is Korean (차분석가_차닥_release.apk).
+  # A UTF-8 locale keeps the JVM (sun.jnu.encoding) and the shell from mangling it.
+  LANG: C.UTF-8
+  LC_ALL: C.UTF-8
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          # v3's default is "tools platform-tools". Google removed the
+          # obsolete tools package, so `sdkmanager tools` exits 1.
+          packages: platform-tools
+
+      - name: Install SDK packages
+        run: sdkmanager --install "platforms;android-35" "build-tools;35.0.0"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Check tag matches version.properties
+        id: version
+        run: |
+          set -euo pipefail
+          props_version="$(awk -F= '
+            /^VERSION_MAJOR=/ { major=$2 }
+            /^VERSION_MINOR=/ { minor=$2 }
+            /^VERSION_PATCH=/ { patch=$2 }
+            END {
+              gsub(/[[:space:]]/, "", major)
+              gsub(/[[:space:]]/, "", minor)
+              gsub(/[[:space:]]/, "", patch)
+              printf "%s.%s.%s", major, minor, patch
+            }
+          ' version.properties)"
+          tag="${GITHUB_REF_NAME}"
+          if [ "$tag" != "v${props_version}" ]; then
+            echo "Tag ${tag} does not match version.properties v${props_version}" >&2
+            exit 1
+          fi
+          echo "version=${props_version}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract changelog section
+        env:
+          PROPS_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          python3 - << 'PY'
+          import os
+          import pathlib
+          import re
+          version = os.environ["PROPS_VERSION"]
+          text = pathlib.Path("CHANGELOG.md").read_text(encoding="utf-8")
+          match = re.search(rf"## \[{re.escape(version)}\].*?(?=\n## |\Z)", text, re.S)
+          notes = match.group(0).strip() if match else f"Release {version}"
+          pathlib.Path("release_notes.md").write_text(notes + "\n", encoding="utf-8")
+          PY
+
+      - name: Build the submission APK
+        env:
+          KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          TEAM_NAME: ${{ vars.TEAM_NAME }}
+        run: |
+          set -euo pipefail
+          if [ -n "${KEYSTORE_BASE64}" ] && [ -n "${KEYSTORE_PASSWORD}" ] && [ -n "${KEY_ALIAS}" ] && [ -n "${KEY_PASSWORD}" ]; then
+            echo "${KEYSTORE_BASE64}" | base64 -d > "${RUNNER_TEMP}/chadak-release.jks"
+            export KEYSTORE_PATH="${RUNNER_TEMP}/chadak-release.jks"
+            echo "Using the release keystore from GitHub Actions secrets."
+          else
+            unset KEYSTORE_PATH KEYSTORE_PASSWORD KEY_ALIAS KEY_PASSWORD || true
+            echo "Release signing secrets are absent. Falling back to the debug keystore."
+          fi
+          args=()
+          if [ -n "${TEAM_NAME}" ]; then
+            args+=("-PteamName=${TEAM_NAME}")
+          fi
+          ./gradlew packageSubmissionApk "${args[@]}" --stacktrace
+          expected="app/build/submission/차분석가_차닥_release.apk"
+          if [ -z "${TEAM_NAME}" ] && [ ! -f "${expected}" ]; then
+            echo "::error::Expected submission APK not found: ${expected}"
+            ls -la app/build/submission || true
+            exit 1
+          fi
+          find app/build/submission -name '*_release.apk' -print
+
+      - name: Upload submission APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: submission-apk
+          path: "app/build/submission/*_release.apk"
+          if-no-files-found: error
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag="${GITHUB_REF_NAME}"
+          apk=(app/build/submission/*_release.apk)
+          if gh release view "$tag" >/dev/null 2>&1; then
+            gh release upload "$tag" "${apk[@]}" --clobber
+          else
+            gh release create "$tag" "${apk[@]}" \
+              --title "$tag" \
+              --notes-file release_notes.md
+          fi
