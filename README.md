@@ -72,15 +72,15 @@ SDK는 Maven `https://nexus-playground.pleos.ai/repository/maven-releases/`에�
 ./gradlew packageSubmissionApk
 ```
 
-`packageSubmissionApk`는 `app/build/submission/차분석가_차닥_release.apk`를 만듭니다. 이름 규칙은 `apk/README.md`를 봅니다. 서명 비밀이 없으면 release APK도 디버그 키로 서명되어 설치할 수 있습니다. 키스토어는 저장소에 넣지 않습니다. `CONTRIBUTING.md`의 서명 절을 봅니다.
+`packageSubmissionApk`는 `app/build/submission/차량분석가_차닥_release.apk`를 만듭니다. 이름 규칙은 `apk/README.md`를 봅니다. 서명 비밀이 없으면 release APK도 디버그 키로 서명되어 설치할 수 있습니다. 키스토어는 저장소에 넣지 않습니다. `CONTRIBUTING.md`의 서명 절을 봅니다.
 
 ## APK 위치
 
 제출 규칙의 위치는 저장소 `apk/`입니다. 지금은 이름 규칙(`apk/README.md`)과 `.gitkeep`만 있습니다. 빌드 산출물은 git에 올리지 않습니다.
 
-- 로컬 파일: `app/build/submission/차분석가_차닥_release.apk`
-- 제출 때 복사할 위치: `apk/차분석가_차닥_release.apk` (규칙: `apk/팀명_앱이름_release.apk`)
-- 태그를 푸시하면 GitHub Release에 같은 규칙의 APK가 붙습니다. 파일이 크면 그 Release URL을 제출합니다. 스켈레톤 시점에는 아직 Release가 없습니다.
+- 로컬 파일: `app/build/submission/차량분석가_차닥_release.apk`
+- 제출 때 복사할 위치: `apk/차량분석가_차닥_release.apk` (규칙: `apk/팀명_앱이름_release.apk`)
+- 태그를 푸시하면 GitHub Release에는 `VehicleDiagnosis_Chadak_release.apk`가 붙습니다. 한글 제출 파일은 워크플로 아티팩트 `submission-apk`에 있습니다. 자세한 내용은 `apk/README.md`입니다.
 
 ## 브랜치와 버전
 
