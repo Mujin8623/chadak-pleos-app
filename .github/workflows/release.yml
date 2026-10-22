@@ -8,6 +8,12 @@ on:
 permissions:
   contents: write
 
+env:
+  # The submission APK name is Korean (차분석가_차닥_release.apk).
+  # A UTF-8 locale keeps the JVM (sun.jnu.encoding) and the shell from mangling it.
+  LANG: C.UTF-8
+  LC_ALL: C.UTF-8
+
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -93,7 +99,20 @@ jobs:
             args+=("-PteamName=${TEAM_NAME}")
           fi
           ./gradlew packageSubmissionApk "${args[@]}" --stacktrace
+          expected="app/build/submission/차분석가_차닥_release.apk"
+          if [ -z "${TEAM_NAME}" ] && [ ! -f "${expected}" ]; then
+            echo "::error::Expected submission APK not found: ${expected}"
+            ls -la app/build/submission || true
+            exit 1
+          fi
           find app/build/submission -name '*_release.apk' -print
+
+      - name: Upload submission APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: submission-apk
+          path: "app/build/submission/*_release.apk"
+          if-no-files-found: error
 
       - name: Publish GitHub Release
         env:

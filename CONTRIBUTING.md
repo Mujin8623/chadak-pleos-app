@@ -34,7 +34,7 @@ PR로만 병합합니다.
 1. `CHANGELOG.md`의 `[Unreleased]` 내용을 `## [x.y.z] - YYYY-MM-DD`로 옮기고, `version.properties`를 그 버전으로 맞춥니다.
 2. `main`에 병합한 뒤 `vX.Y.Z` 태그를 푸시합니다. 태그는 `version.properties`와 같아야 합니다. 예: `v0.1.0`.
 3. `.github/workflows/release.yml`이 release APK를 만들고 GitHub Release에 첨부합니다. 릴리스 노트는 해당 CHANGELOG 절입니다.
-4. 제출용 파일 이름은 `팀명_앱이름_release.apk`입니다. 워크플로 기본 파일은 ASCII인 `TEAM_Chadak_release.apk`입니다. 저장소 변수 `TEAM_NAME`을 팀명으로 두면 그 이름을 씁니다. 한글 앱 이름이 필요하면 `-PapkAppName=차닥`으로 빌드합니다. 자세한 내용은 `apk/README.md`입니다.
+4. 제출용 파일 이름은 `팀명_앱이름_release.apk`입니다. 기본 파일은 `차분석가_차닥_release.apk`입니다(팀명 `차 분석가`는 공백 없이 `차분석가`). 저장소 변수 `TEAM_NAME`이 있으면 그 값을 팀명으로 씁니다. 자세한 내용은 `apk/README.md`입니다.
 
 ## 비밀과 서명
 
