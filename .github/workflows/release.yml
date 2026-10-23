@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 env:
-  # The submission APK name is Korean (차분석가_차닥_release.apk).
+  # The submission APK name is Korean (차량분석가_차닥_release.apk).
   # A UTF-8 locale keeps the JVM (sun.jnu.encoding) and the shell from mangling it.
   LANG: C.UTF-8
   LC_ALL: C.UTF-8
@@ -99,7 +99,7 @@ jobs:
             args+=("-PteamName=${TEAM_NAME}")
           fi
           ./gradlew packageSubmissionApk "${args[@]}" --stacktrace
-          expected="app/build/submission/차분석가_차닥_release.apk"
+          expected="app/build/submission/차량분석가_차닥_release.apk"
           if [ -z "${TEAM_NAME}" ] && [ ! -f "${expected}" ]; then
             echo "::error::Expected submission APK not found: ${expected}"
             ls -la app/build/submission || true
