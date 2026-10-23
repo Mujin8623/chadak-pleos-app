@@ -9,8 +9,10 @@ permissions:
   contents: write
 
 env:
-  # The submission APK name is Korean (차분석가_차닥_release.apk).
+  # The submission APK name is Korean (차량분석가_차닥_release.apk).
   # A UTF-8 locale keeps the JVM (sun.jnu.encoding) and the shell from mangling it.
+  # The GitHub Release asset is an ASCII copy (VehicleDiagnosis_Chadak_release.apk).
+  # The Releases API replaces characters outside [A-Za-z0-9._-].
   LANG: C.UTF-8
   LC_ALL: C.UTF-8
 
@@ -99,7 +101,7 @@ jobs:
             args+=("-PteamName=${TEAM_NAME}")
           fi
           ./gradlew packageSubmissionApk "${args[@]}" --stacktrace
-          expected="app/build/submission/차분석가_차닥_release.apk"
+          expected="app/build/submission/차량분석가_차닥_release.apk"
           if [ -z "${TEAM_NAME}" ] && [ ! -f "${expected}" ]; then
             echo "::error::Expected submission APK not found: ${expected}"
             ls -la app/build/submission || true
@@ -120,11 +122,20 @@ jobs:
         run: |
           set -euo pipefail
           tag="${GITHUB_REF_NAME}"
-          apk=(app/build/submission/*_release.apk)
+          built=(app/build/submission/*_release.apk)
+          if [ "${#built[@]}" -ne 1 ] || [ ! -f "${built[0]}" ]; then
+            echo "::error::Expected exactly one submission APK under app/build/submission" >&2
+            printf '%s\n' "${built[@]}" >&2
+            exit 1
+          fi
+          # The submission-apk artifact already uploaded the Korean file.
+          # Copy it aside so the Release asset name stays ASCII.
+          asset="${RUNNER_TEMP}/VehicleDiagnosis_Chadak_release.apk"
+          cp "${built[0]}" "${asset}"
           if gh release view "$tag" >/dev/null 2>&1; then
-            gh release upload "$tag" "${apk[@]}" --clobber
+            gh release upload "$tag" "${asset}" --clobber
           else
-            gh release create "$tag" "${apk[@]}" \
+            gh release create "$tag" "${asset}" \
               --title "$tag" \
               --notes-file release_notes.md
           fi

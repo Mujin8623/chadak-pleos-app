@@ -6,6 +6,7 @@
 
 ### Changed
 
+- 제출용 APK 기본 팀명을 `차분석가`에서 `차량분석가`로 바꿨습니다. 빌드 산출물과 `submission-apk` 아티팩트는 `차량분석가_차닥_release.apk`입니다. GitHub Release 자산은 한글 이름이 깨지므로 같은 파일을 `VehicleDiagnosis_Chadak_release.apk`로 복사해 첨부합니다.
 - 제출용 APK 기본 파일 이름을 `TEAM_Chadak_release.apk`에서 `차분석가_차닥_release.apk`로 바꿨습니다(공모전 규칙 `apk/팀명_앱이름_release.apk`). 릴리스 워크플로는 UTF-8 로캘로 빌드하고 APK를 `submission-apk` 아티팩트로도 올립니다.
 
 ## [0.1.0] - 2026-10-21
